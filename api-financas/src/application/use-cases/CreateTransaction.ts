@@ -2,6 +2,7 @@
 import type { ITransactionRepository } from '../../domain/repositories/ITransactionRepository';
 import { Transaction } from '../../domain/entities/Transaction';
 import { randomUUID } from 'crypto';
+import { sendToN8n } from '../../infrastructure/services/webhookService';
 
 export class CreateTransaction {
   constructor(private repo: ITransactionRepository) {}
@@ -22,6 +23,7 @@ export class CreateTransaction {
         );
 
     await this.repo.save(transaction);
+    await sendToN8n(transaction)
     return transaction;
   }
 }
